@@ -1,12 +1,12 @@
-*-- Ejemplo de Uso de Interface COM para generar Facturas Electrónica en formato PDF
-*-- Según AFIP Resolición General 2485/2006 y normativa relacionada (RG1415/03 y RG1361), aplicable a:
-*--  * mercado interno (WSFEv1 y WSMTXCA, incluyendo importación, con y sin detalle)
-*--  * exportación (WSFEX)
-*--  * bono fiscal electrónico (WSBFE)
+*-- Ejemplo de Uso de Interface COM para generar Facturas ElectrÃ³nica en formato PDF
+*-- SegÃºn AFIP ResoliciÃ³n General 2485/2006 y normativa relacionada (RG1415/03 y RG1361), aplicable a:
+*--  * mercado interno (WSFEv1 y WSMTXCA, incluyendo importaciÃ³n, con y sin detalle)
+*--  * exportaciÃ³n (WSFEX)
+*--  * bono fiscal electrÃ³nico (WSBFE)
 *-- 2011 (C) Mariano Reingart <reingart@gmail.com>
 *-- Licencia: GPLv3
 
-*-- Crear objeto interface para generación de F.E. en PDF
+*-- Crear objeto interface para generaciÃ³n de F.E. en PDF
 PyFEPDF = CREATEOBJECT("PyFEPDF")
 ? PyFEPDF.Version
 ? PyFEPDF.InstallDir
@@ -16,7 +16,7 @@ PyFEPDF.CUIT = "33693450239"
 
 tipo_cbte = 1       && Factura A
 punto_vta = 4000    && prefijo
-cbte_nro = 12345678 && número de factura
+cbte_nro = 12345678 && nÃºmero de factura
 fecha = "27/03/2011"
 concepto = 3
 *-- datos del cliente:
@@ -24,7 +24,7 @@ tipo_doc = 80
 nro_doc = "30000000007"
 nombre_cliente = "Joao Da Silva"
 domicilio_cliente = "Rua 76 km 34.5 Alagoas"
-pais_dst_cmp = 16 && código para exportación
+pais_dst_cmp = 16 && cÃ³digo para exportaciÃ³n
 id_impositivo = "PJ54482221-l"
 *-- totales del comprobante:
 imp_total = "122.00"
@@ -37,7 +37,7 @@ imp_subtotal = "100.00"
 descuento = "10.00"
 fecha_cbte = fecha
 fecha_venc_pago = fecha
-*-- Fechas del período del servicio facturado
+*-- Fechas del perÃ­odo del servicio facturado
 fecha_serv_desde = fecha
 fecha_serv_hasta = fecha
 moneda_id = "PES"
@@ -47,14 +47,14 @@ obs_comerciales = "Observaciones Comerciales, texto libre"
 moneda_id = "012"
 moneda_ctz = 0.5
 forma_pago = "30 dias"
-incoterms = "FOB" && termino de comercio exterior para exportación
-idioma_cbte = 1   && idioma para exportación (no usado por el momento)
-*-- motivo de observación (F136 y otros - RG2485/08 Art. 30 inc. c):
-motivo_obs = "10063: Factura individual, DocTipo: 80, " + ;
+incoterms = "FOB" && termino de comercio exterior para exportaciÃ³n
+idioma_cbte = 1   && idioma para exportaciÃ³n (no usado por el momento)
+*-- motivo de observaciÃ³n (F136 y otros - RG2485/08 Art. 30 inc. c):
+motivos_obs = "10063: Factura individual, DocTipo: 80, " + ;
     "DocNro 30000000007 no se encuentra inscripto en condicion ACTIVA en el impuesto."
 
-*-- Código de Autorización Electrónica y fecha de vencimiento:
-*-- (para facturas tradicionales, no imprimir el CAE ni código de barras)
+*-- CÃ³digo de AutorizaciÃ³n ElectrÃ³nica y fecha de vencimiento:
+*-- (para facturas tradicionales, no imprimir el CAE ni cÃ³digo de barras)
 cae = "61123022925855"
 fecha_vto_cae = "20110320"
 
@@ -67,13 +67,13 @@ ok = PyFEPDF.CrearFactura(;
     moneda_id, moneda_ctz, cae, fecha_vto_cae, id_impositivo, ;
     nombre_cliente, domicilio_cliente, pais_dst_cmp)
 
-*-- Establezco el resto de los campos (limitación de 27 parametros en VFP)
+*-- Establezco el resto de los campos (limitaciÃ³n de 27 parametros en VFP)
 PyFEPDF.EstablecerParametro("obs_comerciales", obs_comerciales)
 PyFEPDF.EstablecerParametro("obs_generales", obs_generales)
 PyFEPDF.EstablecerParametro("forma_pago", forma_pago)
 PyFEPDF.EstablecerParametro("incoterms", incoterms)
 PyFEPDF.EstablecerParametro("idioma_cbte", idioma_cbte)
-PyFEPDF.EstablecerParametro("motivo_obs", motivo_obs)
+PyFEPDF.EstablecerParametro("motivos_obs", motivos_obs)
 PyFEPDF.EstablecerParametro("descuento", descuento)
 
 *-- Agregar comprobantes asociados (si es una NC/ND):
@@ -83,8 +83,8 @@ PyFEPDF.EstablecerParametro("descuento", descuento)
 && pyfepdf.AgregarCmpAsoc(tipo, pto_vta, nro)
 
 *-- Agrego subtotales de IVA (uno por alicuota)
-iva_id = 5      && código para alícuota del 21%
-base_imp = 100  && importe neto sujeto a esta alícuota
+iva_id = 5      && cÃ³digo para alÃ­cuota del 21%
+base_imp = 100  && importe neto sujeto a esta alÃ­cuota
 importe = 21    && importe liquidado de iva
 ok = PyFEPDF.AgregarIva(iva_id, base_imp, importe)
 
@@ -98,17 +98,17 @@ ok = PyFEPDF.AgregarTributo(tributo_id, Desc, base_imp, alic, importe)
 
 *-- Agrego detalles de cada item de la factura:
 u_mtx = "123456"            && unidades
-cod_mtx = "1234567890123"   && código de barras
+cod_mtx = "1234567890123"   && cÃ³digo de barras
 codigo = "P0001"            && codigo interno a imprimir (ej. "articulo")
 ds = "Descripcion del producto P0001"
 qty = 1                     && cantidad
-umed = 7                    && código de unidad de medida (ej. 7 para "unidades")
+umed = 7                    && cÃ³digo de unidad de medida (ej. 7 para "unidades")
 precio = 100                && precio neto (A) o iva incluido (B)
 bonif = 0                   && importe de descuentos
-iva_id = 5                  && código para alícuota del 21%
+iva_id = 5                  && cÃ³digo para alÃ­cuota del 21%
 imp_iva = 21                && importe liquidado de iva
 importe = 121               && importe total del item
-despacho = "Nº 123456"      && numero de despacho de importación
+despacho = "NÂº 123456"      && numero de despacho de importaciÃ³n
 dato_a = "DATO A"           && primer dato adicional del item
 dato_b = "DATO B"
 dato_c = "DATO C"
@@ -149,9 +149,9 @@ Italic = 1
 Underline = 1 && tipo de letra
 foreground = "000000"
 background = "FFFFFF"    && colores de frente y fondo
-Align = "C" && Alineación: Centrado, Izquierda, Derecha
+Align = "C" && AlineaciÃ³n: Centrado, Izquierda, Derecha
 prioridad = 2 && Orden Z, menor prioridad se dibuja primero (para superposiciones)
-txt = "¡prueba!"
+txt = "Â¡prueba!"
 priority = 1
 ok = PyFEPDF.AgregarCampo(nombre, tipo, X1, Y1, X2, Y2, ;
                     Font, Size, Bold, Italic, Underline, ;
@@ -163,11 +163,11 @@ papel = "A4" && o "letter" para carta, "legal" para oficio
 orientacion = "portrait" && o landscape (apaisado)
 ok = PyFEPDF.CrearPlantilla(papel, orientacion)
 num_copias = 3  && original, duplicado y triplicado
-lineas_max = 24 && cantidad de linas de items por página
-qty_pos = "izq" && (cantidad a la izquierda de la descripción del artículo)
+lineas_max = 24 && cantidad de linas de items por pÃ¡gina
+qty_pos = "izq" && (cantidad a la izquierda de la descripciÃ³n del artÃ­culo)
 && Proceso la plantilla
 ok = PyFEPDF.ProcesarPlantilla(num_copias, lineas_max, qty_pos)
-&& Genero el PDF de salida según la plantilla procesada
+&& Genero el PDF de salida segÃºn la plantilla procesada
 salida = "factura.pdf"
 ok = PyFEPDF.GenerarPDF(salida)
 
